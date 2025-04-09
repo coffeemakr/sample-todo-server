@@ -28,11 +28,11 @@ const server = http.createServer((req, res) => {
     });
     req.on("end", () => {
       randomDelay(() => {
-        const newTodo = JSON.parse(body);
-        newTodo.id = todos.length + 1;
-        todos.push(newTodo);
+        const newTask = JSON.parse(body);
+        newTask.id = todos.length + 1;
+        todos.push(newTask);
         res.writeHead(201, { "Content-Type": "application/json" });
-        res.end(JSON.stringify(newTodo));
+        res.end(JSON.stringify(newTask));
       });
     });
   } else if (req.url.startsWith("/todos/") && req.method === "PUT") {
@@ -43,29 +43,29 @@ const server = http.createServer((req, res) => {
     });
     req.on("end", () => {
       randomDelay(() => {
-        const updatedTodo = JSON.parse(body);
-        const index = todos.findIndex((todo) => todo.id === id);
+        const updatedTask = JSON.parse(body);
+        const index = todos.findIndex((task) => task.id === id);
         if (index !== -1) {
-          todos[index] = { ...todos[index], ...updatedTodo };
+          todos[index] = { ...todos[index], ...updatedTask };
           res.writeHead(200, { "Content-Type": "application/json" });
           res.end(JSON.stringify(todos[index]));
         } else {
           res.writeHead(404, { "Content-Type": "application/json" });
-          res.end(JSON.stringify({ message: "Todo not found" }));
+          res.end(JSON.stringify({ message: "Task not found" }));
         }
       });
     });
   } else if (req.url.startsWith("/todos/") && req.method === "DELETE") {
     const id = parseInt(req.url.split("/")[2]);
     randomDelay(() => {
-      const index = todos.findIndex((todo) => todo.id === id);
+      const index = todos.findIndex((task) => task.id === id);
       if (index !== -1) {
         todos.splice(index, 1);
         res.writeHead(204);
         res.end();
       } else {
         res.writeHead(404, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ message: "Todo not found" }));
+        res.end(JSON.stringify({ message: "Task not found" }));
       }
     });
   } else if (req.method === "OPTIONS") {
